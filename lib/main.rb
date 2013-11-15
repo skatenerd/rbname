@@ -7,6 +7,8 @@ class Main
 
     puts "what is pattern?"
     pattern = gets.chomp
+    puts ""
+    puts ""
 
     occurrences = Occurrences.find(pattern, root_path)
 

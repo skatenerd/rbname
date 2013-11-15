@@ -27,7 +27,7 @@ baz
     file_path = "tmp/wat"
     File.write(file_path, "foo\n")
     Replacement.replace(FileLine.new(1, file_path)) do |file_line|
-      file_line.lines_with_context(0).first.upcase
+      file_line.raw_contents.upcase
     end
     `cat #{file_path}`.should == "FOO\n"
   end
