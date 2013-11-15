@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+%w(. ./lib/).each do |path|
+    $: << path
+end
+
+require 'main'
+
+Main.replace_all("tmp")
