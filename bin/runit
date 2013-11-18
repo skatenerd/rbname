@@ -6,4 +6,4 @@ end
 
 require 'main'
 
-Main.replace_all("tmp")
+Main.replace_all(".")
