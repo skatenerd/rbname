@@ -10,7 +10,7 @@ class ChangePrompt
     puts(file_line.present_contents(pattern, LINES_OF_CONTEXT))
     puts "-----------------------------------"
     puts "\n"
-    puts("Would you like to change this line?\n\n")
+    puts("Would you like to update this line?\n\n")
     new_text = gets
     puts("")
     new_text
