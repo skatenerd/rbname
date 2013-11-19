@@ -1,7 +1,5 @@
-require 'theory'
-require 'io_prompt'
-require 'occurrences'
 require 'replacement'
+require 'change_prompt'
 
 class Main
   def self.replace_all(root_path)
@@ -11,15 +9,18 @@ class Main
     puts ""
     puts ""
 
-    occurrences = Occurrences.find(pattern, root_path)
+    file_lines = FileLine.find_all(pattern, root_path)
     theories = []
 
-    occurrences.each do |occurrence|
-      Replacement.replace(occurrence) do |file_line|
-        old = file_line.raw_contents
-        new = IOPrompt.prompt(pattern, file_line, theories)
-        theories << Theory.new(old, new)
-        new
+    file_lines.each do |file_line|
+      if file_line.raw_contents.match(pattern)
+        old_contents = file_line.raw_contents
+        user_input = ChangePrompt.prompt(pattern, file_line)
+        if user_input.downcase.match('y')
+          system "vim +#{file_line.number} #{file_line.path} -c 'normal zz'"
+        end
+        new_contents = file_line.raw_contents
+        theories << Replacement.new(old_contents, new_contents)
       end
     end
   end

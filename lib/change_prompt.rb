@@ -1,7 +1,7 @@
 require 'colorize'
 require 'file_line'
 
-class IOPrompt
+class ChangePrompt
   LINES_OF_CONTEXT = 2
   def self.prompt(pattern, file_line)
     puts "-----------------------------------"
@@ -10,7 +10,7 @@ class IOPrompt
     puts(file_line.present_contents(pattern, LINES_OF_CONTEXT))
     puts "-----------------------------------"
     puts "\n"
-    puts("What should this line become?\n\n")
+    puts("Would you like to change this line?\n\n")
     new_text = gets
     puts("")
     new_text

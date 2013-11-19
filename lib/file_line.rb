@@ -8,6 +8,15 @@ class FileLine
     @path = path
   end
 
+  def self.find_all(pattern, directory_path)
+    grep_results = `grep -Irn "#{pattern}" #{directory_path} --exclude-dir="*.*.*"`
+    grep_results.split("\n").map do |grep_hit|
+      file_path, line_number, _ = grep_hit.split(":")
+      line_number = line_number.to_i
+      FileLine.new(line_number, file_path)
+    end
+  end
+
   def present_contents(pattern, context = 0)
     current_highlighted_line = add_line_number(with_highlighting(pattern))
     lower_limit = [number - context, 1].max
@@ -20,12 +29,12 @@ class FileLine
     (above_lines + [current_highlighted_line] + below_lines).join("\n")
   end
 
-  def with_line_number
-    add_line_number(raw_contents)
-  end
-
   def raw_contents
     `sed -n '#{number}p' #{path}`.chomp
+  end
+
+  def with_line_number
+    add_line_number(raw_contents)
   end
 
   private

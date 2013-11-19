@@ -2,33 +2,36 @@ require 'rspec'
 require 'replacement'
 
 describe Replacement do
-
-  before(:each) do
-    FileUtils.rm_rf("tmp/.", secure: true)
+  it "encapsulates a replacement inside a string" do
+    presented_to_user = "same foo same"
+    after_user_update = "same babar same"
+    replacement = Replacement.generate(presented_to_user, after_user_update)
+    replacement.to_replace.should == "foo"
+    replacement.new_text.should == "babar"
   end
 
-  it "replaces by line number and new-text, one-indexed" do
-    file_path = "tmp/wat"
-
-initial_file_contents =
-"""foo
-bar
-baz
-"""
-
-    File.write(file_path, initial_file_contents)
-    Replacement.replace(FileLine.new(2, file_path)) do
-      "new stuff"
-    end
-    `cat #{file_path}`.should == "foo\nnew stuff\nbaz\n"
+  it "makes a suggestion for a string" do
+    replacement = Replacement.new("foo", "babar")
+    replacement.suggest("another foo example").should == "another babar example"
   end
 
-  it "manipulates lines in the file" do
-    file_path = "tmp/wat"
-    File.write(file_path, "foo\n")
-    Replacement.replace(FileLine.new(1, file_path)) do |file_line|
-      file_line.raw_contents.upcase
-    end
-    `cat #{file_path}`.should == "FOO\n"
+  it "suggest null, if it cannot make a good suggestion" do
+    replacement = Replacement.new("foo", "babar")
+    replacement.suggest("irrelevant").should be_nil
+  end
+
+  it "makes suggestions based on a collection of theories" do
+    first_replacement = Replacement.new("foo", "hi")
+    second_replacement = Replacement.new("foo", "bye")
+    third_replacement = Replacement.new("not_found", "panda")
+
+    Replacement.suggestions([first_replacement, second_replacement, third_replacement], "foo").should == ["hi", "bye"]
+  end
+
+  it "does not duplicate suggestions" do
+    first_replacement = Replacement.new("foo", "hi")
+    second_replacement = Replacement.new("foo", "hi")
+
+    Replacement.suggestions([first_replacement, second_replacement], "foo").should == ["hi"]
   end
 end
