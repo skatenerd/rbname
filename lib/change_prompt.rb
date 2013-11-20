@@ -3,16 +3,35 @@ require 'file_line'
 
 class ChangePrompt
   LINES_OF_CONTEXT = 2
+  USE_EDITOR = "E"
+
+  attr_reader :user_input
+
   def self.prompt(pattern, file_line, replacements)
     present_line(file_line, pattern)
     puts("Would you like to update this line?\n\n")
-    puts("E:  Edit in Vi")
+    puts("#{USE_EDITOR}:  Edit in Vi")
     replacements.each_with_index do |replacement, index|
       puts "#{index}:  #{replacement.suggest(file_line.raw_contents)}"
     end
-    new_text = gets
+    user_input = gets
     puts("")
-    new_text
+    ChangePrompt.new(user_input)
+  end
+
+
+  def initialize(user_input)
+    @user_input = user_input
+  end
+
+  def chose_editor?
+    user_input.downcase.match(USE_EDITOR.downcase)
+  end
+
+  def integer_input
+    Integer(user_input)
+  rescue => e
+    nil
   end
 
   private

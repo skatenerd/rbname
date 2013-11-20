@@ -17,6 +17,10 @@ class FileLine
     end
   end
 
+  def update_filesystem!(new_contents)
+    `sed -e '#{number} s/.*/#{new_contents}/' -i '' #{path}`
+  end
+
   def present_contents(pattern, context = 0)
     current_highlighted_line = add_line_number(with_highlighting(pattern))
     lower_limit = [number - context, 1].max
