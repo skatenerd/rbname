@@ -42,7 +42,7 @@ class Main
   end
 
   def self.edit_with_vim!(file_line, pattern)
-    system "vim +#{file_line.number} #{file_line.path} -c 'normal zz' -c '#{"/"+pattern}' -c 'normal n'"
+    system "vim +#{file_line.number} #{file_line.path} -c '#{"/"+pattern}' -c 'normal n' -c 'normal N' -c 'normal zz'"
   end
 
 end
