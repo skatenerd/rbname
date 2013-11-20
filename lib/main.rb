@@ -11,16 +11,16 @@ class Main
     puts ""
 
     file_lines = FileLine.find_all(pattern, root_path)
-    replacements_so_far = ReplacementCollection.new
+    replacement_collection = ReplacementCollection.new
 
     file_lines.each do |file_line|
       if file_line.raw_contents.match(pattern)
         old_contents = file_line.raw_contents
-        applicable_replacements = replacements_so_far.applicable_replacements(old_contents)
+        applicable_replacements = replacement_collection.applicable_replacements(old_contents)
         user_input = ChangePrompt.prompt(pattern, file_line, applicable_replacements)
         if user_input.chose_editor?
           edit_with_vim!(file_line, pattern)
-          update_replacement_collection!(replacements_so_far, old_contents, file_line)
+          update_replacement_collection!(replacement_collection, old_contents, file_line)
         elsif user_input.integer_input
           update_according_to_sugestion(user_input.integer_input, applicable_replacements, file_line)
         end
@@ -30,9 +30,9 @@ class Main
 
   private
 
-  def self.update_replacement_collection!(replacements_so_far, old_contents, file_line)
+  def self.update_replacement_collection!(replacement_collection, old_contents, file_line)
         new_contents = file_line.raw_contents
-        replacements_so_far << Replacement.generate(old_contents, new_contents) unless old_contents == new_contents
+        replacement_collection << Replacement.generate(old_contents, new_contents) unless old_contents == new_contents
   end
 
   def self.update_according_to_sugestion(integer_input, applicable_replacements, file_line)
