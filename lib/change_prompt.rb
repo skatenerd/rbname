@@ -1,5 +1,5 @@
 require 'colorize'
-require 'file_line'
+require 'file_line_presenter'
 
 class ChangePrompt
   LINES_OF_CONTEXT = 2
@@ -42,7 +42,7 @@ class ChangePrompt
     puts "-----------------------------------"
     puts("FILENAME: #{file_line.path}")
     puts "-----------------------------------"
-    puts(file_line.present_contents(pattern, LINES_OF_CONTEXT))
+    puts(FileLinePresenter.present_contents(file_line, pattern, LINES_OF_CONTEXT))
     puts "-----------------------------------"
     puts "\n"
   end
