@@ -6,4 +6,4 @@ end
 
 require 'main'
 
-Main.replace_all(".")
+Main.replace_all

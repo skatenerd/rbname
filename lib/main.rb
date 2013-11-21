@@ -3,11 +3,13 @@ require 'change_prompt'
 require 'replacement_collection'
 
 class Main
-  def self.replace_all(root_path)
-
-    puts "what is pattern?"
+  def self.replace_all
+    puts "We will be replacing some text today."
+    puts "What is a pattern describing the text you want to replace?"
     pattern = gets.chomp
     puts ""
+    puts "What is root of your search? ('.' would probably work fine)"
+    root_path = gets.chomp
     puts ""
 
     file_lines = FileLine.find_all(pattern, root_path)

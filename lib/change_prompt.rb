@@ -9,11 +9,13 @@ class ChangePrompt
 
   def self.prompt(pattern, file_line, replacements)
     present_line(file_line, pattern)
-    puts("Would you like to update this line?\n\n")
+    puts("How would you like to update the above line? Options below.  Hit return to do nothing\n\n")
+    puts "------------------------------"
     puts("#{USE_EDITOR}:  Edit in Vi")
     replacements.each_with_index do |replacement, index|
       puts "#{index}:  #{replacement.suggest(file_line.raw_contents)}"
     end
+    puts "------------------------------"
     user_input = gets
     puts("")
     ChangePrompt.new(user_input)
