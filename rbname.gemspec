@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "rbname"
-  s.version     = "0.0.1"
+  s.version     = "0.0.2"
   s.date        = "2013-11-21"
   s.summary     = "CLI Find/Replace"
   s.description = "It makes stupid suggestions"
