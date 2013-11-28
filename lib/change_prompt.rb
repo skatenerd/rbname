@@ -4,18 +4,19 @@ require 'file_line_presenter'
 class ChangePrompt
   LINES_OF_CONTEXT = 2
   USE_EDITOR = "E"
+  HORIZONTAL_LINE = "-" * 100
 
   attr_reader :user_input
 
   def self.prompt(pattern, file_line, replacements)
     present_line(file_line, pattern)
     puts("How would you like to update the above line? Options below.  Hit return to do nothing\n\n")
-    puts "------------------------------"
+    puts HORIZONTAL_LINE
     puts("#{USE_EDITOR}:  Edit in Vi")
     replacements.each_with_index do |replacement, index|
       puts "#{index}:  #{replacement.suggest(file_line.raw_contents)}"
     end
-    puts "------------------------------"
+    puts HORIZONTAL_LINE
     user_input = gets
     puts("")
     ChangePrompt.new(user_input)
@@ -39,11 +40,11 @@ class ChangePrompt
   private
 
   def self.present_line(file_line, pattern)
-    puts "-----------------------------------"
+    puts HORIZONTAL_LINE
     puts("FILENAME: #{file_line.path}")
-    puts "-----------------------------------"
+    puts HORIZONTAL_LINE
     puts(FileLinePresenter.present_contents(file_line, pattern, LINES_OF_CONTEXT))
-    puts "-----------------------------------"
+    puts HORIZONTAL_LINE
     puts "\n"
   end
 end
