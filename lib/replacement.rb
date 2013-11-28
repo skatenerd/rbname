@@ -27,7 +27,7 @@ class Replacement
 
   def suggest(to_change)
     if to_change.match(to_replace)
-      to_change.gsub(to_replace, new_text)
+      to_change.sub(to_replace, new_text)
     end
   end
 
