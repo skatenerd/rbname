@@ -4,13 +4,8 @@ require 'replacement_collection'
 
 class Main
   def self.replace_all
-    puts "We will be replacing some text today."
-    puts "What is a pattern describing the text you want to replace?"
-    pattern = gets.chomp
-    puts ""
-    puts "What is root of your search? ('.' would probably work fine)"
-    root_path = gets.chomp
-    puts ""
+
+    pattern, root_path = prompt_search_details
 
     file_lines = FileLine.find_all(pattern, root_path)
     replacement_collection = ReplacementCollection.new
@@ -22,9 +17,9 @@ class Main
         user_input = ChangePrompt.prompt(pattern, file_line, applicable_replacements)
         if user_input.chose_editor?
           edit_with_vim!(file_line, pattern)
-          update_replacement_collection!(replacement_collection, old_contents, file_line)
+          record_manual_replacement!(replacement_collection, old_contents, file_line)
         elsif user_input.integer_input
-          update_according_to_sugestion(user_input.integer_input, applicable_replacements, file_line)
+          take_user_suggestion!(user_input.integer_input, applicable_replacements, file_line)
         end
       end
     end
@@ -32,12 +27,23 @@ class Main
 
   private
 
-  def self.update_replacement_collection!(replacement_collection, old_contents, file_line)
-        new_contents = file_line.raw_contents
-        replacement_collection << Replacement.generate(old_contents, new_contents) unless old_contents == new_contents
+  def self.prompt_search_details
+    puts "We will be replacing some text today."
+    puts "What is a pattern describing the text you want to replace?"
+    pattern = gets.chomp
+    puts ""
+    puts "What is root of your search? ('.' would probably work fine)"
+    root_path = gets.chomp
+    puts ""
+    [pattern, root_path]
   end
 
-  def self.update_according_to_sugestion(integer_input, applicable_replacements, file_line)
+  def self.record_manual_replacement!(replacement_collection, old_contents, file_line)
+    new_contents = file_line.raw_contents
+    replacement_collection << Replacement.generate(old_contents, new_contents) unless old_contents == new_contents
+  end
+
+  def self.take_user_suggestion!(integer_input, applicable_replacements, file_line)
     replacement = applicable_replacements[integer_input]
     new_contents = replacement.suggest(file_line.raw_contents)
     file_line.update_filesystem!(new_contents)
