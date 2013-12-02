@@ -17,14 +17,27 @@ class ChangePrompt
       puts "#{index}:  #{replacement.suggest(file_line.raw_contents)}"
     end
     puts HORIZONTAL_LINE
+    get_the_input(replacements)
+  end
+
+  def self.get_the_input(replacements)
     user_input = gets
     puts("")
-    ChangePrompt.new(user_input)
+    prompt = ChangePrompt.new(user_input, replacements.count)
+
+    until(prompt.valid?)
+      puts "Yo, that is not a good answer.  Try again"
+      user_input = gets
+      puts("")
+      prompt = ChangePrompt.new(user_input, replacements.count)
+    end
+    prompt
   end
 
 
-  def initialize(user_input)
+  def initialize(user_input, replacements_count)
     @user_input = user_input
+    @replacements_count = replacements_count
   end
 
   def chose_editor?
@@ -37,7 +50,17 @@ class ChangePrompt
     nil
   end
 
+  def valid?
+    chose_editor? || valid_integer_input || user_input.chomp.empty?
+  end
+
   private
+
+  attr_reader :replacements_count
+
+  def valid_integer_input
+    (0...replacements_count).include?(integer_input)
+  end
 
   def self.present_line(file_line, pattern)
     puts HORIZONTAL_LINE
