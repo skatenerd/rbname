@@ -6,10 +6,6 @@ class Replacement
     @new_text = new_text
   end
 
-  def self.suggestions(replacements, to_change)
-    replacements.map { |replacement| replacement.suggest(to_change) }.uniq.compact
-  end
-
   def self.generate(before, after)
     leading_same_characters_count =  (0..before.length).to_a.find do |index|
       before[index] != after[index]
