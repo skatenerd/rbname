@@ -26,7 +26,7 @@ class ChangePrompt
     prompt = ChangePrompt.new(user_input, replacements.count)
 
     until(prompt.valid?)
-      puts "Yo, that is not a good answer.  Try again"
+      puts "Yo, #{prompt.instance_variable_get(:@user_input)} is not a good answer.  Try again"
       user_input = gets
       puts("")
       prompt = ChangePrompt.new(user_input, replacements.count)
