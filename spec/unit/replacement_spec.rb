@@ -12,4 +12,13 @@ describe Replacement do
     replacement.suggest("irrelevant").should be_nil
   end
 
+  it "understands pure insertions based on what is to the right" do
+    replacement = Replacement.generate("use MyClass", "use ExtendedMyClass")
+    replacement.suggest("require MyClass").should == "require ExtendedMyClass"
+  end
+
+  it "understands pure insertions based on what is to the left" do
+    replacement = Replacement.generate("MyClass lol", "MyClassExtended lol")
+    replacement.suggest("MyClass zzz").should == "MyClassExtended zzz"
+  end
 end

@@ -1,9 +1,15 @@
-class Replacement
-  attr_reader :to_replace, :new_text
+require 'extensions/array'
+require 'extensions/string'
+require 'replacement/score'
 
-  def initialize(to_replace, new_text)
-    @to_replace = to_replace
-    @new_text = new_text
+class Replacement
+  attr_reader :removed_by_user, :added_by_user
+
+  def initialize(removed_by_user, added_by_user, left_context, right_context)
+    @removed_by_user = removed_by_user
+    @added_by_user = added_by_user
+    @left_context = left_context
+    @right_context = right_context
   end
 
   def self.generate(before, after)
@@ -15,16 +21,27 @@ class Replacement
       before[before.length - index - 1] != after[after.length - index - 1]
     end
 
-    to_replace = drop_characters(before, leading_same_characters_count, trailing_same_characters_count)
-    new_text = drop_characters(after, leading_same_characters_count, trailing_same_characters_count)
+    removed_by_user = drop_characters(before, leading_same_characters_count, trailing_same_characters_count)
+    added_by_user = drop_characters(after, leading_same_characters_count, trailing_same_characters_count)
 
-    Replacement.new(to_replace, new_text)
+    left_context = before[0...leading_same_characters_count]
+
+    right_context = before[-trailing_same_characters_count..-1]
+
+    Replacement.new(removed_by_user, added_by_user, left_context, right_context)
   end
 
-  def suggest(to_change)
-    if to_change.match(to_replace)
-      to_change.sub(to_replace, new_text)
+  def suggest(requiring_suggestions)
+    indices = requiring_suggestions.indices_of_pattern(removed_by_user)
+
+    best_replacement_index = indices.max_key do |index|
+      Score.best_score(removed_by_user, requiring_suggestions, @left_context, @right_context, index)
     end
+
+    return unless best_replacement_index
+
+    subbed = requiring_suggestions[best_replacement_index..-1].sub(removed_by_user, added_by_user)
+    requiring_suggestions[0...best_replacement_index] + subbed
   end
 
   private
@@ -33,3 +50,4 @@ class Replacement
     subject[leading...(subject.size - trailing)]
   end
 end
+
