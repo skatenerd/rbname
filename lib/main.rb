@@ -26,7 +26,7 @@ class Main
           manual_edit.execute!(file_line, pattern)
           record_manual_replacement!(replacement_collection, old_contents, file_line)
         elsif user_input.selected_replacement
-          take_user_suggestion!(user_input.selected_replacement, applicable_replacements, file_line)
+          take_user_suggestion!(user_input.selected_replacement, file_line)
         end
       end
     end
@@ -61,7 +61,7 @@ class Main
     replacement_collection
   end
 
-  def take_user_suggestion!(replacement, applicable_replacements, file_line)
+  def take_user_suggestion!(replacement, file_line)
     new_contents = replacement.suggest(file_line.raw_contents)
     file_line.update_filesystem!(new_contents)
   end
