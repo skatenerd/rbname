@@ -44,6 +44,19 @@ class Replacement
     requiring_suggestions[0...best_replacement_index] + subbed
   end
 
+  def highlighted_suggest(requiring_suggestions)
+    indices = requiring_suggestions.indices_of_pattern(removed_by_user)
+
+    best_replacement_index = indices.max_key do |index|
+      Score.best_score(removed_by_user, requiring_suggestions, @left_context, @right_context, index)
+    end
+
+    return unless best_replacement_index
+
+    subbed = requiring_suggestions[best_replacement_index..-1].sub(removed_by_user, added_by_user.red)
+    requiring_suggestions[0...best_replacement_index] + subbed
+  end
+
   private
 
   def self.drop_characters(subject, leading, trailing)

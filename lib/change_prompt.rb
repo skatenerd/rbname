@@ -14,7 +14,7 @@ class ChangePrompt
     puts HORIZONTAL_LINE
     puts("#{USE_EDITOR}:  Edit in Vi")
     replacements.each_with_index do |replacement, index|
-      puts "#{one_indexed(index)}:  #{replacement.suggest(file_line.raw_contents)}"
+      puts "#{one_indexed(index)}:  #{replacement.highlighted_suggest(file_line.raw_contents)}"
     end
     puts HORIZONTAL_LINE
     get_the_input(replacements)
