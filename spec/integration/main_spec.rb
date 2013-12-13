@@ -26,7 +26,7 @@ describe Main do
     File.write("tmp/second_file.rb", "yolo\nyolo\nfoo")
     File.write("tmp/third_file.rb", "foo\n")
 
-    ChangePrompt.stub(:gets).and_return("E\n", "99\n", "E\n", "1000", "1")
+    ChangePrompt.stub(:gets).and_return("E\n", "99\n", "E\n", "1000", "2")
     ChangePrompt.stub(:puts)
 
     main = Main.new

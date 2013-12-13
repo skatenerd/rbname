@@ -15,19 +15,19 @@ describe ChangePrompt do
   end
 
   it "lets the user chose the first option presented" do
-    ChangePrompt.stub(gets: "0\n")
-    file_line = FileLine.new(1, __FILE__)
+    ChangePrompt.stub(gets: "1\n")
     replacement = Replacement.generate("require", "zzzzzzzzz")
+    file_line = FileLine.new(1, __FILE__)
     user_input = ChangePrompt.prompt(".*", file_line, [replacement])
-    user_input.integer_input.should == 0
+    user_input.selected_replacement.should == replacement
   end
 
   it "keeps prompting until the user enters good inputs" do
-    ChangePrompt.stub(:gets).and_return("9\n", "0\n")
-    file_line = FileLine.new(1, __FILE__)
+    ChangePrompt.stub(:gets).and_return("9\n", "1\n")
     replacement = Replacement.generate("require", "zzzzzzzzz")
+    file_line = FileLine.new(1, __FILE__)
     user_input = ChangePrompt.prompt(".*", file_line, [replacement])
-    user_input.integer_input.should == 0
+    user_input.selected_replacement.should == replacement
   end
 
   it "lets the user enter empty input" do
@@ -36,6 +36,6 @@ describe ChangePrompt do
     replacement = Replacement.generate("require", "zzzzzzzzz")
     user_input = ChangePrompt.prompt(".*", file_line, [replacement])
     user_input.should_not be_chose_editor
-    user_input.integer_input.should be_nil
+    user_input.selected_replacement.should be_nil
   end
 end
