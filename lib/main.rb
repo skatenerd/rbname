@@ -40,9 +40,19 @@ class Main
     pattern = gets.chomp
     puts ""
     puts "What is root of your search? ('.' would probably work fine)"
-    root_path = gets.chomp
+    root_path = get_root_path
     puts ""
     [pattern, root_path]
+  end
+
+  def get_root_path
+    chomped = gets.chomp
+    if chomped.empty?
+      puts "Defaulting to current directory.  Hit return to begin"
+      gets
+      return "."
+    end
+    return chomped
   end
 
   def record_manual_replacement!(replacement_collection, old_contents, file_line)
