@@ -6,7 +6,7 @@ class FileLinePresenter
 
   def self.present_contents(file_line, pattern, context = 0)
     current_highlighted_line = with_line_number(file_line, with_highlighting(file_line, pattern))
-    line_number = file_line.number
+    line_number = file_line.line_number
     line_path = file_line.path
     lower_limit = [line_number - context, 1].max
     upper_limit = [line_number + context, file_length(file_line)].min
@@ -27,7 +27,7 @@ class FileLinePresenter
   end
 
   def self.with_line_number(file_line, contents = file_line.raw_contents)
-    "#{file_line.number}:#{TAB}#{contents}"
+    "#{file_line.line_number}:#{TAB}#{contents}"
   end
 
   def self.with_highlighting(file_line, pattern)

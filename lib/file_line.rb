@@ -1,9 +1,9 @@
 require 'colorize'
 
 class FileLine
-  attr_accessor :number, :path
-  def initialize(number, path)
-    @number = number
+  attr_accessor :line_number, :path
+  def initialize(line_number, path)
+    @line_number = line_number
     @path = path
   end
 
@@ -17,11 +17,11 @@ class FileLine
   end
 
   def update_filesystem!(new_contents)
-    `sed -e '#{number} s/.*/#{new_contents}/' -i '' #{path}`
+    `sed -e '#{line_number} s/.*/#{new_contents}/' -i '' #{path}`
   end
 
   def raw_contents
-    `sed -n '#{number}p' #{path}`.chomp
+    `sed -n #{line_number}p #{path}`.chomp
   end
 
 end

@@ -13,7 +13,7 @@ describe FileLine do
       File.write(file_path, "foo\nbar\nbaz\n")
       occurrences = FileLine.find_all("bar", "tmp")
       occurrences.count.should == 1
-      occurrences[0].number.should == 2
+      occurrences[0].line_number.should == 2
       occurrences[0].path.should == file_path
     end
 
