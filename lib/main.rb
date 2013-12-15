@@ -46,13 +46,23 @@ class Main
   end
 
   def get_root_path
-    chomped = gets.chomp
-    if chomped.empty?
+    search_root_input = gets.chomp
+
+    until valid_path?(search_root_input)
+      puts "That path doesn't exist, buddy.  Hit me again"
+      search_root_input = gets.chomp
+    end
+
+    if  search_root_input.empty?
       puts "Defaulting to current directory.  Hit return to begin"
       gets
       return "."
     end
-    return chomped
+    return search_root_input
+  end
+
+  def valid_path?(path_input)
+    File.exist?(path_input) || path_input.empty?
   end
 
   def record_manual_replacement!(replacement_collection, old_contents, file_line)
