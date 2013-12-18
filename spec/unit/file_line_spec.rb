@@ -42,17 +42,17 @@ describe FileLine do
       file_line = FileLine.new(2, file_path)
       file_line.update_filesystem!("lol")
 
-      File.read(file_path).should == "foo\nlol\nfoo\n"
+      File.read(file_path).should == "foo\nlol\nfoo"
     end
 
-    it "does not mess up quotations" do
+    it "does not mess up single quotations" do
       file_path = "tmp/single_file.rb"
       File.write(file_path, "require 'what'")
 
       file_line = FileLine.new(1, file_path)
       file_line.update_filesystem!("require 'okay'")
 
-      File.read(file_path).should == "require 'okay'\n"
+      File.read(file_path).should == "require 'okay'"
     end
   end
 

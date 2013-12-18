@@ -17,7 +17,10 @@ class FileLine
   end
 
   def update_filesystem!(new_contents)
-    `sed -e "#{line_number} s/.*/#{new_contents}/" -i '' #{path}`
+    contents = File.read(path)
+    splitted = contents.split("\n")
+    splitted[line_number - 1] = new_contents
+    File.write(path, splitted.join("\n"))
   end
 
   def raw_contents
