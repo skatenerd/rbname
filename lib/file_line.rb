@@ -17,7 +17,7 @@ class FileLine
   end
 
   def update_filesystem!(new_contents)
-    `sed -e '#{line_number} s/.*/#{new_contents}/' -i '' #{path}`
+    `sed -e "#{line_number} s/.*/#{new_contents}/" -i '' #{path}`
   end
 
   def raw_contents

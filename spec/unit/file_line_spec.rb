@@ -32,7 +32,28 @@ describe FileLine do
       occurrences = FileLine.find_all("foo", "tmp")
       occurrences.count.should == 6
     end
+  end
 
+  describe "#update_filesystem!" do
+    it "changes an entire line" do
+      file_path = "tmp/single_file.rb"
+      File.write(file_path, "foo\nfoo\nfoo\n")
+
+      file_line = FileLine.new(2, file_path)
+      file_line.update_filesystem!("lol")
+
+      File.read(file_path).should == "foo\nlol\nfoo\n"
+    end
+
+    it "does not mess up quotations" do
+      file_path = "tmp/single_file.rb"
+      File.write(file_path, "require 'what'")
+
+      file_line = FileLine.new(1, file_path)
+      file_line.update_filesystem!("require 'okay'")
+
+      File.read(file_path).should == "require 'okay'\n"
+    end
   end
 
 end
