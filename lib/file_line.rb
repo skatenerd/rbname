@@ -7,8 +7,8 @@ class FileLine
     @path = path
   end
 
-  def self.find_all(pattern, directory_path)
-    grep_results = `grep -Irn "#{pattern}" #{directory_path} --exclude-dir="*.*.*"`
+  def self.find_all(pattern, directory_path, *file_exclusions)
+    grep_results = `grep -Irn "#{pattern}" #{directory_path} --exclude-dir="*.*.*" --exclude=#{format_exclusions(file_exclusions)}`
     grep_results.split("\n").map do |grep_hit|
       file_path, line_number, _ = grep_hit.split(":")
       line_number = line_number.to_i
@@ -25,6 +25,16 @@ class FileLine
 
   def raw_contents
     `sed -n #{line_number}p #{path}`.chomp
+  end
+
+  private
+
+  def self.format_exclusions(files)
+    if files.count == 1
+      files.first
+    else
+      "{#{files.join(",")}}"
+    end
   end
 
 end
