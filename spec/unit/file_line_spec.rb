@@ -24,6 +24,24 @@ describe FileLine do
       occurrences.count.should == 3
     end
 
+    it "excludes a file" do
+      file = "tmp/single_file.rb"
+      File.write(file, "foo\nbar\nbaz\n")
+      occurrences = FileLine.find_all("foo", "tmp", "single_file.rb")
+      occurrences.count.should == 0
+    end
+
+    it "excludes multiple files" do
+      first_file = "tmp/first_file.rb"
+      second_file = "tmp/second_file.rb"
+
+      File.write(first_file, "foo\nbar\nbaz\n")
+      File.write(second_file, "baz\nbar\nfoo\n")
+      occurrences = FileLine.find_all("foo", "tmp", "first_file.rb",
+                                      "second_file.rb")
+      occurrences.count.should == 0
+    end
+
     it "reports multiple occurrences in multiple files" do
       first_path = "tmp/first_file.rb"
       second_path = "tmp/second_file.rb"

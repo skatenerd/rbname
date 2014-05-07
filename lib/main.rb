@@ -12,9 +12,9 @@ class Main
   end
 
   def replace_all
-    pattern, root_path = prompt_search_details
+    pattern, root_path, file_exclusions = prompt_search_details
 
-    file_lines = FileLine.find_all(pattern, root_path)
+    file_lines = FileLine.find_all(pattern, root_path, *file_exclusions.split(","))
     replacement_collection = ReplacementCollection.new
 
     file_lines.each do |file_line|
@@ -42,7 +42,10 @@ class Main
     puts "What is root of your search? ('.' would probably work fine)"
     root_path = get_root_path
     puts ""
-    [pattern, root_path]
+    puts "Any files to exclude? (separate by ',' please, no whitespace)"
+    file_exclusions = gets.chomp
+    puts ""
+    [pattern, root_path, file_exclusions]
   end
 
   def get_root_path
